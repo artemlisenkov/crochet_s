@@ -6,7 +6,7 @@ import {initTRPC, TRPCError} from "@trpc/server";
 import {getSession} from "@/src/lib/auth";
 
 
-export const createTRPCContext = cache(() => { db });
+export const createTRPCContext = cache(() => ({ db }));
 
 type Context = {
     db: typeof db;

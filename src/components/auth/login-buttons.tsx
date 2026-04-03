@@ -21,9 +21,9 @@ export const LoginButtons = () => {
                 Google
             </Button>
             <div className="flex items-center gap-3" data-testid="signup-separator">
-                <Separator className="flex-1" />
+                <Separator className="flex-1 outline" />
                 <span className="text-xs text-muted-foreground">OR CONTINUE WITH</span>
-                <Separator className="flex-1" />
+                <Separator className="flex-1 outline" />
             </div>
             <div className="space-y-2" data-testid="email-field">
                 <Label htmlFor="email">Email</Label>
