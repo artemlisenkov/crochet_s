@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { buttonVariants, Button } from "@/src/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "@/src/components/ui/card";
 import { cn } from "@/src/lib/utils";
 import {
     landingLanguages,
@@ -11,13 +11,41 @@ import {
 } from "@/src/app/_ui/landing-translations";
 import type { LandingLanguage } from "@/src/app/_ui/landing-translations";
 
+const catalogProductImages = {
+    "cardigan-cloudy": "/cardigan-cloudy.jpg?v=2",
+};
+
+const catalogPageSize = 4;
+
 export const LandingPageContents = () => {
     const [language, setLanguage] = useState<LandingLanguage>("en");
+    const [isCatalogVisible, setIsCatalogVisible] = useState(false);
+    const catalogRef = useRef<HTMLElement | null>(null);
     const translation = landingTranslations[language];
 
     useEffect(() => {
         document.documentElement.lang = language;
     }, [language]);
+
+    useEffect(() => {
+        const catalogElement = catalogRef.current;
+
+        if (!catalogElement) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry?.isIntersecting) {
+                    setIsCatalogVisible(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.25 }
+        );
+
+        observer.observe(catalogElement);
+
+        return () => observer.disconnect();
+    }, []);
 
     const navItems = [
         { label: translation.nav.aboutMe, href: "#aboutMe" },
@@ -114,14 +142,25 @@ export const LandingPageContents = () => {
                     </div>
 
                     <div className="order-1 lg:order-2">
-                        <div className="ml-auto max-w-md overflow-hidden border border-[#d78d98] bg-[#fffaf8] p-3 shadow-[12px_12px_0_rgba(176,91,102,0.2)]">
-                            <div className="relative aspect-4/5 overflow-hidden bg-white">
+                        <div className="group/photo ml-auto max-w-md overflow-hidden rounded-md border border-[#d78d98] bg-[#fffaf8] p-3 shadow-[12px_12px_0_rgba(176,91,102,0.2)]">
+                            <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-white">
                                 <Image
-                                    src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80"
+                                    src="/main.jpg?v=2"
                                     alt={translation.aboutMe.imageAlt}
                                     fill
                                     sizes="(min-width: 1024px) 420px, 100vw"
-                                    className="h-full w-full object-cover"
+                                    priority
+                                    unoptimized
+                                    className="h-full w-full object-cover transition-opacity duration-1000 ease-out group-hover/photo:opacity-0"
+                                />
+                                <Image
+                                    src="/main-on-hover.jpg?v=2"
+                                    alt=""
+                                    fill
+                                    sizes="(min-width: 1024px) 420px, 100vw"
+                                    loading="eager"
+                                    unoptimized
+                                    className="h-full w-full object-cover opacity-0 transition-opacity duration-1000 ease-out group-hover/photo:opacity-100"
                                 />
                             </div>
                             <div className="px-1 pb-2 pt-5 text-left">
@@ -129,7 +168,7 @@ export const LandingPageContents = () => {
                                     Kate
                                 </p>
                                 <p className="mt-2 font-serif text-2xl leading-none text-[#2c2426]">
-                                    Crochet makes
+                                    Crochet Maker
                                 </p>
                             </div>
                         </div>
@@ -139,7 +178,7 @@ export const LandingPageContents = () => {
                 <section id="customOrder" className="scroll-mt-16 border-y border-[#ead0d4] bg-white/50 px-4 py-16 sm:px-6">
                     <div className="mx-auto max-w-6xl">
                         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-                            <div className="border border-[#d78d98] bg-[#fffaf8] p-6 shadow-[10px_10px_0_rgba(176,91,102,0.14)] sm:p-8">
+                            <div className="rounded-md border border-[#d78d98] bg-[#fffaf8] p-6 shadow-[10px_10px_0_rgba(176,91,102,0.14)] sm:p-8">
                                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
                                     {translation.customOrder.eyebrow}
                                 </p>
@@ -180,7 +219,7 @@ export const LandingPageContents = () => {
                     </div>
                 </section>
 
-                <section id="catalog" className="scroll-mt-16 px-4 py-16 sm:px-6">
+                <section ref={catalogRef} id="catalog" className="scroll-mt-16 px-4 py-16 sm:px-6">
                     <div className="mx-auto max-w-6xl">
                         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
                             {translation.catalog.eyebrow}
@@ -189,21 +228,14 @@ export const LandingPageContents = () => {
                             {translation.catalog.title}
                         </h2>
 
-                        <div className="mt-8 grid gap-4 md:grid-cols-3">
-                            {translation.catalog.items.map((item) => (
-                                <Card
-                                    key={item.title}
-                                    className="rounded-md border-[#ead0d4] bg-white/55 shadow-none ring-[#ead0d4] transition-all duration-200 hover:-translate-y-1 hover:border-[#d88c98] hover:bg-white/80 hover:shadow-md"
-                                >
-                                    <CardHeader>
-                                        <CardTitle>{item.title}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <CardDescription className="text-[#6a5b5f]">
-                                            {item.description}
-                                        </CardDescription>
-                                    </CardContent>
-                                </Card>
+                        <div className="mt-10 space-y-14">
+                            {translation.catalog.groups.map((group) => (
+                                <CatalogProductGroup
+                                    key={group.title}
+                                    group={group}
+                                    emptyText={translation.catalog.emptyText}
+                                    isVisible={isCatalogVisible}
+                                />
                             ))}
                         </div>
                     </div>
@@ -233,4 +265,106 @@ export const LandingPageContents = () => {
             </main>
         </div>
     )
+}
+
+type CatalogGroup = typeof landingTranslations.en.catalog.groups[number];
+
+function CatalogProductGroup({
+    group,
+    emptyText,
+    isVisible,
+}: {
+    group: CatalogGroup;
+    emptyText: string;
+    isVisible: boolean;
+}) {
+    const [page, setPage] = useState(0);
+    const pageCount = Math.max(1, Math.ceil(group.products.length / catalogPageSize));
+    const pageProducts = group.products.slice(page * catalogPageSize, (page + 1) * catalogPageSize);
+
+    const showNextPage = () => setPage((currentPage) => (currentPage + 1) % pageCount);
+
+    return (
+        <section aria-label={group.title}>
+            <div className="mb-5 flex items-end justify-between gap-4">
+                <h3 className="font-serif text-3xl leading-none text-[#2c2426] sm:text-4xl">
+                    {group.title}
+                </h3>
+                {pageCount > 1 ? (
+                    <p className="text-sm font-medium text-[#994d59]">
+                        {page + 1} / {pageCount}
+                    </p>
+                ) : null}
+            </div>
+
+            {group.products.length > 0 ? (
+                <div className="relative">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {pageProducts.map((product, index) => (
+                            <article
+                                key={product.id}
+                                className={cn(
+                                    "min-w-0 transition-all duration-700 ease-out",
+                                    isVisible ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0"
+                                )}
+                                style={{ transitionDelay: `${index * 120}ms` }}
+                            >
+                                <div className="overflow-hidden rounded-md border border-[#d78d98] bg-[#fffaf8] p-2 shadow-[8px_8px_0_rgba(176,91,102,0.12)]">
+                                    <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-white">
+                                        <Image
+                                            src={catalogProductImages[product.id]}
+                                            alt={product.imageAlt}
+                                            fill
+                                            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                                            unoptimized
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
+                                </div>
+                                <h4 className="mt-4 text-lg font-semibold text-[#2c2426]">
+                                    {product.title}
+                                </h4>
+                                <p className="mt-2 text-sm leading-6 text-[#6a5b5f]">
+                                    {product.description}
+                                </p>
+                            </article>
+                        ))}
+                    </div>
+
+                    {pageCount > 1 ? (
+                        <Button
+                            type="button"
+                            size="icon"
+                            className="absolute right-0 top-1/2 size-12 -translate-y-1/2 rounded-full bg-[#b05b66] text-white shadow-md hover:bg-[#994d59]"
+                            aria-label={`Next ${group.title} page`}
+                            onClick={showNextPage}
+                        >
+                            →
+                        </Button>
+                    ) : null}
+
+                    {pageCount > 1 ? (
+                        <div className="mt-6 flex justify-center gap-2">
+                            {Array.from({ length: pageCount }).map((_, index) => (
+                                <button
+                                    key={index}
+                                    type="button"
+                                    className={cn(
+                                        "size-2.5 rounded-full border border-[#d88c98]",
+                                        page === index ? "bg-[#994d59]" : "bg-white/70"
+                                    )}
+                                    aria-label={`Show ${group.title} page ${index + 1}`}
+                                    onClick={() => setPage(index)}
+                                />
+                            ))}
+                        </div>
+                    ) : null}
+                </div>
+            ) : (
+                <p className="border-l-2 border-[#d88c98] pl-4 text-base leading-7 text-[#6a5b5f]">
+                    {emptyText}
+                </p>
+            )}
+        </section>
+    );
 }

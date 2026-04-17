@@ -35,9 +35,15 @@ type LandingTranslation = {
     catalog: {
         eyebrow: string;
         title: string;
-        items: Array<{
+        emptyText: string;
+        groups: Array<{
             title: string;
-            description: string;
+            products: Array<{
+                id: "cardigan-cloudy";
+                title: string;
+                description: string;
+                imageAlt: string;
+            }>;
         }>;
     };
     delivery: {
@@ -67,7 +73,7 @@ export const landingTranslations = {
                 "I am Kate, and this is my calm place for handmade cardigans, scarves, tops, and cozy crochet clothing. I make every item by hand with attention to texture, comfort, and quiet detail.",
             primaryAction: "View catalog",
             secondaryAction: "Contact",
-            imageAlt: "Kate wearing handmade crochet clothing",
+            imageAlt: "Kate photo",
         },
         customOrder: {
             eyebrow: "Made for you",
@@ -96,18 +102,22 @@ export const landingTranslations = {
         catalog: {
             eyebrow: "Catalog",
             title: "Handmade crochet clothing",
-            items: [
+            emptyText: "New models are coming soon.",
+            groups: [
                 {
                     title: "Cardigans",
-                    description: "Soft layered crochet clothing with a relaxed fit and handmade texture.",
-                },
-                {
-                    title: "Scarves",
-                    description: "Cozy crochet scarves for cold seasons and slow mornings.",
+                    products: [
+                        {
+                            id: "cardigan-cloudy",
+                            title: "Cardigan Cloudy",
+                            description: "A soft crochet cardigan with an airy texture and an easy layered fit.",
+                            imageAlt: "Cardigan Cloudy photo",
+                        },
+                    ],
                 },
                 {
                     title: "Tops",
-                    description: "Light crochet tops for warm days, styling layers, and statement looks.",
+                    products: [],
                 },
             ],
         },
@@ -136,7 +146,7 @@ export const landingTranslations = {
                 "Mam na imię Kate i tworzę spokojne miejsce na ręcznie robione kardigany, szaliki, topy i przytulną szydełkowaną odzież. Każdy produkt robię ręcznie, dbając o fakturę, wygodę i subtelne detale.",
             primaryAction: "Zobacz katalog",
             secondaryAction: "Kontakt",
-            imageAlt: "Kate w ręcznie szydełkowanej odzieży",
+            imageAlt: "Zdjęcie Kate",
         },
         customOrder: {
             eyebrow: "Tworzone dla Ciebie",
@@ -165,18 +175,22 @@ export const landingTranslations = {
         catalog: {
             eyebrow: "Katalog",
             title: "Ręcznie szydełkowana odzież",
-            items: [
+            emptyText: "Nowe modele pojawią się wkrótce.",
+            groups: [
                 {
                     title: "Kardigany",
-                    description: "Miękka szydełkowana odzież warstwowa o swobodnym kroju.",
-                },
-                {
-                    title: "Szaliki",
-                    description: "Przytulne szydełkowane szaliki na chłodne sezony i spokojne poranki.",
+                    products: [
+                        {
+                            id: "cardigan-cloudy",
+                            title: "Cardigan Cloudy",
+                            description: "Miękki szydełkowany kardigan o lekkiej fakturze i swobodnej warstwowej formie.",
+                            imageAlt: "Zdjęcie Cardigan Cloudy",
+                        },
+                    ],
                 },
                 {
                     title: "Topy",
-                    description: "Lekkie szydełkowane topy na ciepłe dni, warstwy i wyraziste stylizacje.",
+                    products: [],
                 },
             ],
         },
@@ -205,7 +219,7 @@ export const landingTranslations = {
                 "Мене звати Kate, і це мій спокійний простір для кардиганів, шарфів, топів і затишного одягу гачком ручної роботи. Кожну річ я створюю вручну, з увагою до фактури, комфорту й тихих деталей.",
             primaryAction: "Переглянути каталог",
             secondaryAction: "Контакти",
-            imageAlt: "Kate в одязі ручної роботи гачком",
+            imageAlt: "Фото Kate",
         },
         customOrder: {
             eyebrow: "Створено для вас",
@@ -234,18 +248,22 @@ export const landingTranslations = {
         catalog: {
             eyebrow: "Каталог",
             title: "Одяг ручної роботи гачком",
-            items: [
+            emptyText: "Нові моделі скоро з'являться.",
+            groups: [
                 {
                     title: "Кардигани",
-                    description: "М'який одяг гачком для багатошарових образів і вільної посадки.",
-                },
-                {
-                    title: "Шарфи",
-                    description: "Затишні шарфи гачком для холодних сезонів і повільних ранків.",
+                    products: [
+                        {
+                            id: "cardigan-cloudy",
+                            title: "Cardigan Cloudy",
+                            description: "М'який кардиган гачком із легкою фактурою та зручною посадкою для шарів.",
+                            imageAlt: "Фото Cardigan Cloudy",
+                        },
+                    ],
                 },
                 {
                     title: "Топи",
-                    description: "Легкі топи гачком для теплих днів, шарів і виразних образів.",
+                    products: [],
                 },
             ],
         },
@@ -274,7 +292,7 @@ export const landingTranslations = {
                 "Меня зовут Kate, и это мое спокойное пространство для кардиганов, шарфов, топов и уютной одежды ручной работы крючком. Каждую вещь я создаю вручную, с вниманием к фактуре, комфорту и тихим деталям.",
             primaryAction: "Смотреть каталог",
             secondaryAction: "Контакты",
-            imageAlt: "Kate в одежде ручной работы крючком",
+            imageAlt: "Фото Kate",
         },
         customOrder: {
             eyebrow: "Создано для вас",
@@ -303,18 +321,22 @@ export const landingTranslations = {
         catalog: {
             eyebrow: "Каталог",
             title: "Одежда ручной работы крючком",
-            items: [
+            emptyText: "Новые модели скоро появятся.",
+            groups: [
                 {
                     title: "Кардиганы",
-                    description: "Мягкая одежда крючком для многослойных образов и свободной посадки.",
-                },
-                {
-                    title: "Шарфы",
-                    description: "Уютные шарфы крючком для холодного сезона и спокойных утр.",
+                    products: [
+                        {
+                            id: "cardigan-cloudy",
+                            title: "Cardigan Cloudy",
+                            description: "Мягкий кардиган крючком с воздушной фактурой и удобной посадкой для многослойных образов.",
+                            imageAlt: "Фото Cardigan Cloudy",
+                        },
+                    ],
                 },
                 {
                     title: "Топы",
-                    description: "Легкие топы крючком для теплых дней, слоев и выразительных образов.",
+                    products: [],
                 },
             ],
         },
