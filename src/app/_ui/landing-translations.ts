@@ -55,9 +55,9 @@ export const landingTranslations = {
         },
         aboutMe: {
             eyebrow: "Handmade knitted clothing",
-            title: "Soft knitted clothing made by Kate",
+            title: "Soft knitted clothing made by hand",
             description:
-                "A calm place for handmade sweaters, cardigans, vests, scarves, and cozy knitted accessories. Kate creates every item by hand with attention to texture, comfort, and quiet detail.",
+                "I am Kate, and this is my calm place for handmade sweaters, cardigans, vests, scarves, and cozy knitted accessories. I make every item by hand with attention to texture, comfort, and quiet detail.",
             primaryAction: "View catalog",
             secondaryAction: "Meet Kate",
             imageAlt: "Kate wearing handmade knitwear",
@@ -104,9 +104,9 @@ export const landingTranslations = {
         },
         aboutMe: {
             eyebrow: "Ręcznie robiona odzież z dzianiny",
-            title: "Miękka dzianinowa odzież tworzona przez Kate",
+            title: "Miękka dzianinowa odzież tworzona ręcznie",
             description:
-                "Spokojne miejsce na ręcznie robione swetry, kardigany, kamizelki, szaliki i przytulne dodatki z dzianiny. Kate tworzy każdy produkt ręcznie, dbając o fakturę, wygodę i subtelne detale.",
+                "Mam na imię Kate i tworzę spokojne miejsce na ręcznie robione swetry, kardigany, kamizelki, szaliki oraz przytulne dodatki z dzianiny. Każdy produkt robię ręcznie, dbając o fakturę, wygodę i subtelne detale.",
             primaryAction: "Zobacz katalog",
             secondaryAction: "Poznaj Kate",
             imageAlt: "Kate w ręcznie robionej dzianinie",
@@ -153,9 +153,9 @@ export const landingTranslations = {
         },
         aboutMe: {
             eyebrow: "В'язаний одяг ручної роботи",
-            title: "М'який в'язаний одяг, створений Kate",
+            title: "М'який в'язаний одяг, створений вручну",
             description:
-                "Спокійний простір для светрів, кардиганів, жилетів, шарфів і теплих в'язаних аксесуарів ручної роботи. Kate створює кожну річ вручну, з увагою до фактури, комфорту й тихих деталей.",
+                "Мене звати Kate, і це мій спокійний простір для светрів, кардиганів, жилетів, шарфів і теплих в'язаних аксесуарів ручної роботи. Кожну річ я створюю вручну, з увагою до фактури, комфорту й тихих деталей.",
             primaryAction: "Переглянути каталог",
             secondaryAction: "Познайомитися з Kate",
             imageAlt: "Kate у в'язаному одязі ручної роботи",

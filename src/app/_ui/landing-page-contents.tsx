@@ -42,7 +42,7 @@ export const LandingPageContents = () => {
                                 href={item.href}
                                 className={cn(
                                     buttonVariants({ variant: "ghost", size: "xs" }),
-                                    "px-3 text-xs uppercase text-[#4d3b3f] hover:bg-white/70"
+                                    "px-3 text-xs uppercase text-[#4d3b3f] hover:-translate-y-0.5 hover:bg-white hover:text-[#994d59] hover:shadow-sm"
                                 )}
                             >
                                 {item.label}
@@ -59,7 +59,8 @@ export const LandingPageContents = () => {
                                 type="button"
                                 className={cn(
                                     "h-8 px-2.5 text-xs font-semibold text-[#4d3b3f] hover:bg-white/70",
-                                    language === languageOption.code && "bg-white/75"
+                                    "hover:-translate-y-0.5 hover:bg-white hover:text-[#994d59] hover:shadow-sm",
+                                    language === languageOption.code && "bg-white/75 text-[#994d59]"
                                 )}
                                 aria-label={`Switch language to ${languageOption.label}`}
                                 aria-pressed={language === languageOption.code}
@@ -95,7 +96,7 @@ export const LandingPageContents = () => {
                                 href="#catalog"
                                 className={cn(
                                     buttonVariants(),
-                                    "bg-[#b05b66] px-5 text-white hover:bg-[#994d59]"
+                                    "bg-[#b05b66] px-5 text-white shadow-sm hover:-translate-y-0.5 hover:bg-[#994d59] hover:shadow-md"
                                 )}
                             >
                                 {t.aboutMe.primaryAction}
@@ -104,7 +105,7 @@ export const LandingPageContents = () => {
                                 href="#story"
                                 className={cn(
                                     buttonVariants({ variant: "outline" }),
-                                    "border-[#d9a0a8] bg-white/45 px-5 text-[#6c3f46] hover:bg-white/75"
+                                    "border-[#d9a0a8] bg-white/45 px-5 text-[#6c3f46] hover:-translate-y-0.5 hover:border-[#b05b66] hover:bg-white hover:text-[#994d59] hover:shadow-md"
                                 )}
                             >
                                 {t.aboutMe.secondaryAction}
@@ -113,8 +114,11 @@ export const LandingPageContents = () => {
                     </div>
 
                     <div className="order-1 lg:order-2">
-                        <div className="ml-auto max-w-md border border-[#d78d98] bg-[#f1b8c1] p-3 shadow-[12px_12px_0_rgba(176,91,102,0.2)]">
-                            <div className="relative aspect-[4/5] overflow-hidden bg-white">
+                        <div className="group/photo relative ml-auto max-w-md overflow-hidden border border-[#d78d98] bg-[#f1b8c1] p-3 shadow-[12px_12px_0_rgba(176,91,102,0.2)] transition-transform duration-300 hover:-translate-y-1">
+                            <div className="absolute inset-x-3 bottom-3 flex h-8 items-center justify-center text-sm font-semibold uppercase tracking-[0.28em] text-[#994d59] opacity-0 transition-opacity duration-200 group-hover/photo:opacity-100">
+                                Kate
+                            </div>
+                            <div className="relative z-10 aspect-4/5 overflow-hidden bg-white transition-transform duration-300 ease-out group-hover/photo:-translate-y-10">
                                 <Image
                                     src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80"
                                     alt={t.aboutMe.imageAlt}
@@ -151,7 +155,7 @@ export const LandingPageContents = () => {
                             {t.catalog.items.map((item) => (
                                 <Card
                                     key={item.title}
-                                    className="rounded-md border-[#ead0d4] bg-white/55 shadow-none ring-[#ead0d4]"
+                                    className="rounded-md border-[#ead0d4] bg-white/55 shadow-none ring-[#ead0d4] transition-all duration-200 hover:-translate-y-1 hover:border-[#d88c98] hover:bg-white/80 hover:shadow-md"
                                 >
                                     <CardHeader>
                                         <CardTitle>{item.title}</CardTitle>

@@ -1,5 +1,5 @@
 import {getSession} from "@/src/lib/auth";
-import {redirect} from "next/dist/client/components/redirect";
+import {redirect} from "next/navigation";
 import { LandingPageContents } from "@/src/app/_ui/landing-page-contents";
 import {getQueryClient} from "@/src/trpc/server";
 import {dehydrate, HydrationBoundary} from "@tanstack/react-query";

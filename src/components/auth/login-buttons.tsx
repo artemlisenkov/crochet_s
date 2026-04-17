@@ -11,11 +11,15 @@ export const LoginButtons = () => {
     });
 
     return (
-        <form className="space-y-3" id="signup-form" data-testid="signup-form">
-            <Button onClick={signInWithGoogle}
-                    variant="outline" className="w-full gap-1" type="button" data-testid="google-signup">
+        <form className="space-y-3">
+            <Button
+                onClick={signInWithGoogle}
+                variant="outline"
+                className="w-full gap-2 border-[#d9a0a8] bg-white/70 text-[#4d3b3f] hover:-translate-y-0.5 hover:border-[#b05b66] hover:bg-white hover:text-[#994d59] hover:shadow-md"
+                type="button"
+            >
                 <FcGoogle className="h-4 w-4" aria-hidden="true" />
-                Google
+                Continue with Google
             </Button>
         </form>
     )
