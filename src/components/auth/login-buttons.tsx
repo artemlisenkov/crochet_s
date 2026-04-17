@@ -15,7 +15,7 @@ export const LoginButtons = () => {
             <Button
                 onClick={signInWithGoogle}
                 variant="outline"
-                className="w-full gap-2 border-[#d9a0a8] bg-white/70 text-[#4d3b3f] hover:-translate-y-0.5 hover:border-[#b05b66] hover:bg-white hover:text-[#994d59] hover:shadow-md"
+                className="w-full gap-2 border-[#d9a0a8] bg-white/70 text-[#4d3b3f] hover:-translate-y-0.5 hover:rounded-lg hover:border-[#b05b66] hover:bg-white hover:text-[#994d59] hover:shadow-md"
                 type="button"
             >
                 <FcGoogle className="h-4 w-4" aria-hidden="true" />

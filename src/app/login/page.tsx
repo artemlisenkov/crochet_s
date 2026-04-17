@@ -13,7 +13,7 @@ export async function LoginPage() {
       <Card className="w-full max-w-sm gap-5 rounded-md border-[#ead0d4] bg-white/65 py-7 shadow-[12px_12px_0_rgba(176,91,102,0.14)] ring-[#ead0d4]">
         <CardHeader className="text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#b05b66]">
-            Kate Knitwear
+            Crochet Makes
           </p>
           <CardTitle className="text-2xl text-[#2c2426]">
             Admin sign in
