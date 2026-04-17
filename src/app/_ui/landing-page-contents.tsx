@@ -1,28 +1,38 @@
 "use client"
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { buttonVariants, Button } from "@/src/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/components/ui/card";
+import { cn } from "@/src/lib/utils";
+import {
+    landingLanguages,
+    landingTranslations,
+} from "@/src/app/_ui/landing-translations";
+import type { LandingLanguage } from "@/src/app/_ui/landing-translations";
 
 export const LandingPageContents = () => {
-    const navItems = [
-        { label: "Home", href: "#hero" },
-        { label: "About", href: "#about" },
-        { label: "Catalog", href: "#catalog" },
-        { label: "Delivery", href: "#delivery" },
-        { label: "Contact", href: "#contacts" },
-    ];
+    const [language, setLanguage] = useState<LandingLanguage>("en");
+    const t = landingTranslations[language];
 
-    const languages = [
-        { code: "en", label: "EN", flag: "GB" },
-        { code: "pl", label: "PL", flag: "PL" },
-        { code: "ru", label: "RU", flag: "RU" },
+    useEffect(() => {
+        document.documentElement.lang = language;
+    }, [language]);
+
+    const navItems = [
+        { label: t.nav.aboutMe, href: "#aboutMe" },
+        { label: t.nav.story, href: "#story" },
+        { label: t.nav.catalog, href: "#catalog" },
+        { label: t.nav.delivery, href: "#delivery" },
+        { label: t.nav.contact, href: "#contact" },
     ];
 
     return (
         <div className="min-h-screen bg-[#f8eef0] text-[#2f2a2a]">
             <header className="sticky top-0 z-20 border-b border-white/50 bg-white/45 backdrop-blur-md">
                 <nav className="mx-auto flex min-h-12 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
-                    <a href="#hero" className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
-                        Maison
+                    <a href="#aboutMe" className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
+                        {t.brand}
                     </a>
 
                     <div className="hidden items-center gap-1 rounded-full border border-white/60 bg-white/35 p-1 sm:flex">
@@ -30,7 +40,10 @@ export const LandingPageContents = () => {
                             <a
                                 key={item.href}
                                 href={item.href}
-                                className="rounded-md px-3 py-1.5 text-xs font-medium uppercase text-[#4d3b3f] transition-colors hover:bg-white/70"
+                                className={cn(
+                                    buttonVariants({ variant: "ghost", size: "xs" }),
+                                    "px-3 text-xs uppercase text-[#4d3b3f] hover:bg-white/70"
+                                )}
                             >
                                 {item.label}
                             </a>
@@ -38,54 +51,63 @@ export const LandingPageContents = () => {
                     </div>
 
                     <div className="flex items-center gap-1 rounded-full border border-white/60 bg-white/35 p-1">
-                        {languages.map((language) => (
-                            <button
-                                key={language.code}
+                        {landingLanguages.map((languageOption) => (
+                            <Button
+                                key={languageOption.code}
+                                variant="ghost"
+                                size="sm"
                                 type="button"
-                                className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-semibold text-[#4d3b3f] transition-colors hover:bg-white/70"
-                                aria-label={`Switch language to ${language.label}`}
+                                className={cn(
+                                    "h-8 px-2.5 text-xs font-semibold text-[#4d3b3f] hover:bg-white/70",
+                                    language === languageOption.code && "bg-white/75"
+                                )}
+                                aria-label={`Switch language to ${languageOption.label}`}
+                                aria-pressed={language === languageOption.code}
+                                onClick={() => setLanguage(languageOption.code)}
                             >
-                                <span className="grid size-5 place-items-center rounded-full border border-[#d9a0a8] bg-white text-[9px]">
-                                    {language.flag}
-                                </span>
-                                <span>{language.label}</span>
-                            </button>
+                                <span className={cn(languageOption.flagClassName, "rounded-sm shadow-xs")} />
+                                <span>{languageOption.label}</span>
+                            </Button>
                         ))}
                     </div>
                 </nav>
             </header>
 
             <main>
-                <section id="hero" className="mx-auto grid min-h-[calc(100vh-3rem)] w-full max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.06fr_0.94fr] lg:py-14">
+                <section id="aboutMe" className="mx-auto grid min-h-[calc(100vh-3rem)] scroll-mt-16 w-full max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.06fr_0.94fr] lg:py-14">
                     <div className="order-2 flex flex-col items-center text-center lg:order-1 lg:items-start lg:text-left">
                         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#b05b66]">
-                            Vintage shop and styling
+                            {t.aboutMe.eyebrow}
                         </p>
 
                         <h1 className="max-w-2xl text-4xl font-semibold leading-tight text-[#2c2426] sm:text-5xl lg:text-6xl">
-                            Your main headline goes here
+                            {t.aboutMe.title}
                         </h1>
 
                         <div className="my-7 h-px w-24 bg-[#d88c98]" />
 
                         <p className="max-w-xl text-base leading-7 text-[#5f5154] sm:text-lg">
-                            Add your main landing page copy here: a short brand story,
-                            offer, or introduction. This area is built for a few lines of
-                            text and stays readable next to the photo.
+                            {t.aboutMe.description}
                         </p>
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                             <a
                                 href="#catalog"
-                                className="rounded-md bg-[#b05b66] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#994d59]"
+                                className={cn(
+                                    buttonVariants(),
+                                    "bg-[#b05b66] px-5 text-white hover:bg-[#994d59]"
+                                )}
                             >
-                                View catalog
+                                {t.aboutMe.primaryAction}
                             </a>
                             <a
-                                href="#about"
-                                className="rounded-md border border-[#d9a0a8] bg-white/45 px-5 py-3 text-sm font-semibold text-[#6c3f46] transition-colors hover:bg-white/75"
+                                href="#story"
+                                className={cn(
+                                    buttonVariants({ variant: "outline" }),
+                                    "border-[#d9a0a8] bg-white/45 px-5 text-[#6c3f46] hover:bg-white/75"
+                                )}
                             >
-                                Learn more
+                                {t.aboutMe.secondaryAction}
                             </a>
                         </div>
                     </div>
@@ -95,7 +117,7 @@ export const LandingPageContents = () => {
                             <div className="relative aspect-[4/5] overflow-hidden bg-white">
                                 <Image
                                     src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80"
-                                    alt="Lookbook"
+                                    alt={t.aboutMe.imageAlt}
                                     fill
                                     sizes="(min-width: 1024px) 420px, 100vw"
                                     className="h-full w-full object-cover"
@@ -105,46 +127,64 @@ export const LandingPageContents = () => {
                     </div>
                 </section>
 
-                <section id="about" className="border-y border-[#ead0d4] bg-white/50 px-4 py-16 sm:px-6">
+                <section id="story" className="scroll-mt-16 border-y border-[#ead0d4] bg-white/50 px-4 py-16 sm:px-6">
                     <div className="mx-auto max-w-6xl">
                         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
-                            About
+                            {t.story.eyebrow}
                         </p>
                         <h2 className="mt-3 max-w-2xl text-3xl font-semibold text-[#2c2426]">
-                            Share the story behind the project
+                            {t.story.title}
                         </h2>
                     </div>
                 </section>
 
-                <section id="catalog" className="px-4 py-16 sm:px-6">
+                <section id="catalog" className="scroll-mt-16 px-4 py-16 sm:px-6">
                     <div className="mx-auto max-w-6xl">
                         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
-                            Catalog
+                            {t.catalog.eyebrow}
                         </p>
                         <h2 className="mt-3 max-w-2xl text-3xl font-semibold text-[#2c2426]">
-                            A place for collections, categories, or products
+                            {t.catalog.title}
+                        </h2>
+
+                        <div className="mt-8 grid gap-4 md:grid-cols-3">
+                            {t.catalog.items.map((item) => (
+                                <Card
+                                    key={item.title}
+                                    className="rounded-md border-[#ead0d4] bg-white/55 shadow-none ring-[#ead0d4]"
+                                >
+                                    <CardHeader>
+                                        <CardTitle>{item.title}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <CardDescription className="text-[#6a5b5f]">
+                                            {item.description}
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="delivery" className="scroll-mt-16 border-y border-[#ead0d4] bg-white/50 px-4 py-16 sm:px-6">
+                    <div className="mx-auto max-w-6xl">
+                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
+                            {t.delivery.eyebrow}
+                        </p>
+                        <h2 className="mt-3 max-w-2xl text-3xl font-semibold text-[#2c2426]">
+                            {t.delivery.title}
                         </h2>
                     </div>
                 </section>
 
-                <section id="delivery" className="border-y border-[#ead0d4] bg-white/50 px-4 py-16 sm:px-6">
+                <section id="contact" className="scroll-mt-16 px-4 py-16 sm:px-6">
                     <div className="mx-auto max-w-6xl">
                         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
-                            Delivery
+                            {t.contact.eyebrow}
                         </p>
                         <h2 className="mt-3 max-w-2xl text-3xl font-semibold text-[#2c2426]">
-                            Shipping and payment details
-                        </h2>
-                    </div>
-                </section>
-
-                <section id="contacts" className="px-4 py-16 sm:px-6">
-                    <div className="mx-auto max-w-6xl">
-                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
-                            Contact
-                        </p>
-                        <h2 className="mt-3 max-w-2xl text-3xl font-semibold text-[#2c2426]">
-                            Social links and contact details
+                            {t.contact.title}
                         </h2>
                     </div>
                 </section>
