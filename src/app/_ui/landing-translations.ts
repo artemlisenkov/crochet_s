@@ -77,10 +77,10 @@ export const landingTranslations = {
             contact: "Contact",
         },
         aboutMe: {
-            eyebrow: "Handmade crochet clothing",
-            title: "Soft crochet clothing made by hand",
+            eyebrow: "Your uniqueness starts here",
+            title: "Crochet clothing with your fit, colors, and mood",
             description:
-                "I am Kate, and this is my calm place for handmade cardigans, scarves, tops, and cozy crochet clothing. I make every item by hand with attention to texture, comfort, and quiet detail.",
+                "Each piece is made to feel considered, comfortable, and genuinely yours, with careful attention to texture, shape, and the small details that make it easy to wear.",
             primaryAction: "View catalog",
             secondaryAction: "Contact",
             imageAlt: "Kate photo",
@@ -189,10 +189,10 @@ export const landingTranslations = {
             contact: "Kontakt",
         },
         aboutMe: {
-            eyebrow: "Ręcznie szydełkowana odzież",
-            title: "Miękka szydełkowana odzież tworzona ręcznie",
+            eyebrow: "Twoja wyjątkowość zaczyna się tutaj",
+            title: "Szydełkowana odzież w Twoim kroju, kolorach i nastroju",
             description:
-                "Mam na imię Kate i tworzę spokojne miejsce na ręcznie robione kardigany, szaliki, topy i przytulną szydełkowaną odzież. Każdy produkt robię ręcznie, dbając o fakturę, wygodę i subtelne detale.",
+                "Każda rzecz powstaje tak, aby była przemyślana, wygodna i naprawdę Twoja, z uważnością na fakturę, formę oraz drobne detale, które sprawiają, że chce się ją nosić.",
             primaryAction: "Zobacz katalog",
             secondaryAction: "Kontakt",
             imageAlt: "Zdjęcie Kate",
@@ -301,10 +301,10 @@ export const landingTranslations = {
             contact: "Контакти",
         },
         aboutMe: {
-            eyebrow: "Одяг ручної роботи гачком",
-            title: "М'який одяг гачком, створений вручну",
+            eyebrow: "Твоя унікальність починається тут",
+            title: "Одяг гачком у твоїй посадці, кольорах і настрої",
             description:
-                "Мене звати Kate, і це мій спокійний простір для кардиганів, шарфів, топів і затишного одягу гачком ручної роботи. Кожну річ я створюю вручну, з увагою до фактури, комфорту й тихих деталей.",
+                "Кожна річ створюється так, щоб бути продуманою, комфортною й по-справжньому твоєю, з увагою до фактури, форми та маленьких деталей, які хочеться носити щодня.",
             primaryAction: "Переглянути каталог",
             secondaryAction: "Контакти",
             imageAlt: "Фото Kate",
@@ -413,10 +413,10 @@ export const landingTranslations = {
             contact: "Контакты",
         },
         aboutMe: {
-            eyebrow: "Одежда ручной работы крючком",
-            title: "Мягкая одежда крючком, созданная вручную",
+            eyebrow: "Твоя уникальность начинается здесь",
+            title: "Одежда крючком с твоей посадкой, цветами и настроением",
             description:
-                "Меня зовут Kate, и это мое спокойное пространство для кардиганов, шарфов, топов и уютной одежды ручной работы крючком. Каждую вещь я создаю вручную, с вниманием к фактуре, комфорту и тихим деталям.",
+                "Каждая вещь создается так, чтобы быть продуманной, комфортной и по-настоящему твоей, с вниманием к фактуре, форме и маленьким деталям, которые хочется носить каждый день.",
             primaryAction: "Смотреть каталог",
             secondaryAction: "Контакты",
             imageAlt: "Фото Kate",
