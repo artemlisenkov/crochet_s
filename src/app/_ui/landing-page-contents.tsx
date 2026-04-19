@@ -1,11 +1,13 @@
 "use client"
 
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { buttonVariants, Button } from "@/src/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/src/components/ui/card";
+import { SignOutButton } from "@/src/components/auth/signout-button";
 import { cn } from "@/src/lib/utils";
+import type { PublishedCatalogProduct } from "@/src/app/_data/catalog-products";
 import {
     landingLanguages,
     landingTranslations,
@@ -21,18 +23,59 @@ const catalogProductImages = {
 };
 
 const catalogPageSize = 4;
+const adminDraftStorageKey = "crochet-makes-admin-draft";
+const adminDraftChangeEventName = "admin-draft-change";
 type DevPreviewMode = "desktop" | "phone";
 type LandingCopy = typeof landingTranslations.en;
+type CatalogGroup = typeof landingTranslations.en.catalog.groups[number];
+type CatalogDisplayProduct = {
+    id: string;
+    title: string;
+    description: string;
+    imageAlt: string;
+    imageSrc: string;
+};
 
-export const LandingPageContents = () => {
+const getAdminDraftSnapshot = () => (
+    typeof window === "undefined"
+        ? false
+        : window.localStorage.getItem(adminDraftStorageKey) !== null
+);
+
+const subscribeToAdminDraftChanges = (onStoreChange: () => void) => {
+    const handleStoreChange = () => onStoreChange();
+
+    window.addEventListener("storage", handleStoreChange);
+    window.addEventListener(adminDraftChangeEventName, handleStoreChange);
+
+    return () => {
+        window.removeEventListener("storage", handleStoreChange);
+        window.removeEventListener(adminDraftChangeEventName, handleStoreChange);
+    };
+};
+
+export const LandingPageContents = ({
+    isAdminView = false,
+    databaseProducts = [],
+}: {
+    isAdminView?: boolean;
+    databaseProducts?: PublishedCatalogProduct[];
+}) => {
     const [language, setLanguage] = useState<LandingLanguage>("en");
+    const hasPendingAdminChanges = useSyncExternalStore(
+        subscribeToAdminDraftChanges,
+        getAdminDraftSnapshot,
+        () => false
+    );
     const [isCatalogVisible, setIsCatalogVisible] = useState(false);
     const [devPreviewMode, setDevPreviewMode] = useState<DevPreviewMode>("desktop");
     const catalogRef = useRef<HTMLElement | null>(null);
+    const pathname = usePathname();
     const searchParams = useSearchParams();
     const translation = landingTranslations[language];
     const isDevelopment = process.env.NODE_ENV === "development";
     const isDevPreviewFrame = searchParams.has("devViewport");
+    const canUseDevPreview = isAdminView && isDevelopment && !isDevPreviewFrame;
     const activeLanguageIndex = landingLanguages.findIndex((languageOption) => languageOption.code === language);
 
     useEffect(() => {
@@ -68,13 +111,13 @@ export const LandingPageContents = () => {
         { label: translation.nav.contact, href: "#contact" },
     ];
 
-    if (isDevelopment && !isDevPreviewFrame && devPreviewMode === "phone") {
+    if (canUseDevPreview && devPreviewMode === "phone") {
         return (
             <div className="min-h-screen bg-[#f8eef0] px-4 py-20">
                 <DevViewportSwitch mode={devPreviewMode} onModeChange={setDevPreviewMode} />
                 <div className="mx-auto w-[390px] max-w-full overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-[#ead0d4]">
                     <iframe
-                        src="/?devViewport=phone"
+                        src={`${pathname}?devViewport=phone`}
                         title="Phone preview"
                         className="h-[844px] w-full border-0"
                     />
@@ -85,16 +128,16 @@ export const LandingPageContents = () => {
 
     return (
         <div className="min-h-screen bg-[#f8eef0] text-[#2f2a2a]">
-            {isDevelopment && !isDevPreviewFrame ? (
+            {canUseDevPreview ? (
                 <DevViewportSwitch mode={devPreviewMode} onModeChange={setDevPreviewMode} />
             ) : null}
             <header className="sticky top-0 z-20 border-b border-white/50 bg-white/45 backdrop-blur-md">
-                <nav className="mx-auto flex min-h-12 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+                <nav className="mx-auto grid min-h-12 w-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6">
                     <a href="#aboutMe" className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
                         {translation.brand}
                     </a>
 
-                    <div className="hidden items-center gap-1 rounded-full border border-[#ead0d4]/70 bg-white/45 p-1 shadow-sm sm:flex">
+                    <div className="hidden items-center gap-1 justify-self-center rounded-full border border-[#ead0d4]/70 bg-white/45 p-1 shadow-sm sm:flex">
                         {navItems.map((item) => (
                             <a
                                 key={item.href}
@@ -109,44 +152,65 @@ export const LandingPageContents = () => {
                         ))}
                     </div>
 
-                    <div className="rounded-full border border-[#ead0d4]/70 bg-white/45 p-1 shadow-sm">
-                        <div className="relative grid grid-cols-4">
-                            <span
-                                className="absolute inset-y-0 left-0 rounded-full bg-white/65 shadow-sm transition-transform duration-500 ease-out"
-                                style={{
-                                    width: `${100 / landingLanguages.length}%`,
-                                    transform: `translateX(${activeLanguageIndex * 100}%)`,
-                                }}
-                                aria-hidden="true"
-                            />
-                            {landingLanguages.map((languageOption) => (
-                                <Button
-                                    key={languageOption.code}
-                                    variant="ghost"
-                                    size="sm"
-                                    type="button"
-                                    className={cn(
-                                        "relative z-10 h-8 rounded-full px-2.5 text-xs font-semibold text-[#4d3b3f] hover:bg-white/30 hover:text-[#994d59]",
-                                        language === languageOption.code && "text-[#994d59]"
-                                    )}
-                                    aria-label={`Switch language to ${languageOption.label}`}
-                                    aria-pressed={language === languageOption.code}
-                                    onClick={() => setLanguage(languageOption.code)}
-                                >
-                                    {languageOption.flagClassName ? (
-                                        <span className={cn(languageOption.flagClassName, "rounded-sm shadow-xs")} />
-                                    ) : (
-                                        <span className="h-3 w-4 rounded-sm bg-[#D9D2D2] shadow-xs" aria-hidden="true" />
-                                    )}
-                                    <span>{languageOption.label}</span>
-                                </Button>
-                            ))}
+                    <div className="flex items-center gap-2 justify-self-end">
+                        <div className="rounded-full border border-[#ead0d4]/70 bg-white/45 p-1 shadow-sm">
+                            <div className="relative grid grid-cols-4">
+                                <span
+                                    className="absolute inset-y-0 left-0 rounded-full bg-white/65 shadow-sm transition-transform duration-500 ease-out"
+                                    style={{
+                                        width: `${100 / landingLanguages.length}%`,
+                                        transform: `translateX(${activeLanguageIndex * 100}%)`,
+                                    }}
+                                    aria-hidden="true"
+                                />
+                                {landingLanguages.map((languageOption) => (
+                                    <Button
+                                        key={languageOption.code}
+                                        variant="ghost"
+                                        size="sm"
+                                        type="button"
+                                        className={cn(
+                                            "relative z-10 h-8 rounded-full px-2.5 text-xs font-semibold text-[#4d3b3f] hover:bg-white/30 hover:text-[#994d59]",
+                                            language === languageOption.code && "text-[#994d59]"
+                                        )}
+                                        aria-label={`Switch language to ${languageOption.label}`}
+                                        aria-pressed={language === languageOption.code}
+                                        onClick={() => setLanguage(languageOption.code)}
+                                    >
+                                        {languageOption.flagClassName ? (
+                                            <span className={cn(languageOption.flagClassName, "rounded-sm shadow-xs")} />
+                                        ) : (
+                                            <span className="h-3 w-4 rounded-sm bg-[#D9D2D2] shadow-xs" aria-hidden="true" />
+                                        )}
+                                        <span>{languageOption.label}</span>
+                                    </Button>
+                                ))}
+                            </div>
                         </div>
+
+                        {isAdminView && hasPendingAdminChanges ? (
+                            <Button
+                                type="button"
+                                className="rounded-full bg-[#2f7d5b] px-4 text-white shadow-sm hover:bg-[#256548] hover:text-white"
+                            >
+                                Save
+                            </Button>
+                        ) : null}
+
+                        {isAdminView ? (
+                            <SignOutButton />
+                        ) : null}
                     </div>
                 </nav>
             </header>
 
             <main>
+                {isAdminView ? (
+                    <div className="border-b border-red-200 bg-red-50 px-4 py-2 text-center text-sm font-semibold text-red-700">
+                        Your are having admin&apos;s view
+                    </div>
+                ) : null}
+
                 <section id="aboutMe" className="mx-auto grid min-h-[calc(100vh-3rem)] scroll-mt-16 w-full max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.06fr_0.94fr] lg:py-14">
                     <div className="order-2 flex flex-col items-center text-center lg:order-1 lg:items-start lg:text-left">
                         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#b05b66]">
@@ -222,10 +286,15 @@ export const LandingPageContents = () => {
                         <div className="mt-10 space-y-14">
                             {translation.catalog.groups.map((group) => (
                                 <CatalogProductGroup
-                                    key={group.title}
+                                    key={group.id}
                                     group={group}
+                                    databaseProducts={databaseProducts}
+                                    fallbackProductTitle={translation.catalog.dynamicProductTitle}
+                                    fallbackProductDescription={translation.catalog.dynamicProductDescription}
+                                    fallbackProductImageAlt={translation.catalog.dynamicProductImageAlt}
                                     emptyText={translation.catalog.emptyText}
                                     isVisible={isCatalogVisible}
+                                    isAdminView={isAdminView}
                                 />
                             ))}
                         </div>
@@ -380,29 +449,57 @@ function DevViewportSwitch({
     );
 }
 
-type CatalogGroup = typeof landingTranslations.en.catalog.groups[number];
-
 function CatalogProductGroup({
     group,
+    databaseProducts,
+    fallbackProductTitle,
+    fallbackProductDescription,
+    fallbackProductImageAlt,
     emptyText,
     isVisible,
+    isAdminView,
 }: {
     group: CatalogGroup;
+    databaseProducts: PublishedCatalogProduct[];
+    fallbackProductTitle: string;
+    fallbackProductDescription: string;
+    fallbackProductImageAlt: string;
     emptyText: string;
     isVisible: boolean;
+    isAdminView: boolean;
 }) {
     const [page, setPage] = useState(0);
-    const pageCount = Math.max(1, Math.ceil(group.products.length / catalogPageSize));
-    const pageProducts = group.products.slice(page * catalogPageSize, (page + 1) * catalogPageSize);
+    const products: CatalogDisplayProduct[] = [
+        ...group.products.map((product) => ({
+            ...product,
+            imageSrc: catalogProductImages[product.id],
+        })),
+        ...databaseProducts
+            .filter((product) => product.category === group.id)
+            .map((product) => ({
+                id: product.id,
+                title: product.title ?? fallbackProductTitle,
+                description: product.description ?? fallbackProductDescription,
+                imageAlt: product.imageAlt ?? product.title ?? fallbackProductImageAlt,
+                imageSrc: product.imagePath,
+            })),
+    ];
+    const pageCount = Math.max(1, Math.ceil(products.length / catalogPageSize));
+    const pageProducts = products.slice(page * catalogPageSize, (page + 1) * catalogPageSize);
 
     const showNextPage = () => setPage((currentPage) => (currentPage + 1) % pageCount);
 
     return (
         <section aria-label={group.title}>
             <div className="mb-5 flex items-end justify-between gap-4">
-                <h3 className="font-serif text-3xl leading-none text-[#2c2426] sm:text-4xl">
-                    {group.title}
-                </h3>
+                <div className="flex items-center gap-3">
+                    <h3 className="font-serif text-3xl leading-none text-[#2c2426] sm:text-4xl">
+                        {group.title}
+                    </h3>
+                    {isAdminView ? (
+                        <AdminCategoryAddButton categoryTitle={group.title} />
+                    ) : null}
+                </div>
                 {pageCount > 1 ? (
                     <p className="text-sm font-medium text-[#994d59]">
                         {page + 1} / {pageCount}
@@ -410,7 +507,7 @@ function CatalogProductGroup({
                 ) : null}
             </div>
 
-            {group.products.length > 0 ? (
+            {products.length > 0 ? (
                 <div className="relative">
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                         {pageProducts.map((product, index) => (
@@ -425,7 +522,7 @@ function CatalogProductGroup({
                                 <div className="overflow-hidden rounded-md border border-[#d78d98] bg-[#fffaf8] p-1.5 shadow-none sm:p-2 lg:shadow-[8px_8px_0_rgba(176,91,102,0.12)]">
                                     <div className="relative aspect-3/4 overflow-hidden rounded-md bg-white">
                                         <Image
-                                            src={catalogProductImages[product.id]}
+                                            src={product.imageSrc}
                                             alt={product.imageAlt}
                                             fill
                                             sizes="(min-width: 1024px) 25vw, 50vw"
@@ -474,10 +571,31 @@ function CatalogProductGroup({
                     ) : null}
                 </div>
             ) : (
-                <p className="border-l-2 border-[#d88c98] pl-4 text-base leading-7 text-[#6a5b5f]">
-                    {emptyText}
-                </p>
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    <p className="col-span-2 border-l-2 border-[#d88c98] pl-4 text-base leading-7 text-[#6a5b5f] lg:col-span-4">
+                        {emptyText}
+                    </p>
+                </div>
             )}
         </section>
+    );
+}
+
+function AdminCategoryAddButton({
+    categoryTitle,
+}: {
+    categoryTitle: string;
+}) {
+    return (
+        <button
+            type="button"
+            className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "h-8 rounded-full border-[#ead0d4]/70 bg-white/45 px-3 text-xs font-semibold uppercase tracking-[0.08em] text-[#4d3b3f] shadow-sm hover:bg-white/65 hover:text-[#994d59] hover:shadow-sm"
+            )}
+            aria-label={`Add product photo to ${categoryTitle}`}
+        >
+            Add
+        </button>
     );
 }

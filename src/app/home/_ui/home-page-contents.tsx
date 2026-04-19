@@ -1,13 +1,12 @@
 "use client"
 
-import {SignOutButton} from "@/src/components/auth/signout-button";
+import { LandingPageContents } from "@/src/app/_ui/landing-page-contents";
+import type { PublishedCatalogProduct } from "@/src/app/_data/catalog-products";
 
-export const HomePageContents = () => {
-
-    return (
-        <main className="flex min-h-screen flex-col items-center justify-center bg-muted/40 p-6">
-            This is the home page.
-            <SignOutButton />
-        </main>
-    );
+export const HomePageContents = ({
+    databaseProducts,
+}: {
+    databaseProducts: PublishedCatalogProduct[];
+}) => {
+    return <LandingPageContents isAdminView databaseProducts={databaseProducts} />;
 }

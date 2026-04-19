@@ -1,4 +1,4 @@
-import {pgTable, text, boolean, timestamp} from "drizzle-orm/pg-core";
+import {pgEnum, pgTable, text, boolean, timestamp, integer, index} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
@@ -45,3 +45,21 @@ export const verification = pgTable("verification", {
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
     updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
 });
+
+export const catalogCategory = pgEnum("catalog_category", ["cardigans", "tops"]);
+
+export const catalogProduct = pgTable("catalog_product", {
+    id: text("id").primaryKey(),
+    category: catalogCategory("category").notNull(),
+    title: text("title"),
+    description: text("description"),
+    imagePath: text("image_path").notNull(),
+    imageAlt: text("image_alt"),
+    sortOrder: integer("sort_order").notNull().default(0),
+    isPublished: boolean("is_published").notNull().default(true),
+    createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+    index("catalog_product_category_sort_idx").on(table.category, table.sortOrder),
+    index("catalog_product_published_idx").on(table.isPublished),
+]);

@@ -9,14 +9,14 @@ export const SignOutButton = () => {
 
     const signOut = async () => await authClient.signOut({
         fetchOptions: {
-            onSuccess: () => router.push("/login")
+            onSuccess: () => router.push("/")
         },
     });
 
     return (
         <Button
             onClick={signOut}
-            variant="outline"
+            className="rounded-full bg-red-600 px-4 text-white shadow-sm hover:bg-red-700 hover:text-white"
         >
             Sign Out
         </Button>

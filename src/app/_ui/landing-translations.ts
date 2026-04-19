@@ -36,7 +36,11 @@ type LandingTranslation = {
         eyebrow: string;
         title: string;
         emptyText: string;
+        dynamicProductTitle: string;
+        dynamicProductDescription: string;
+        dynamicProductImageAlt: string;
         groups: Array<{
+            id: "cardigans" | "tops";
             title: string;
             products: Array<{
                 id: "cardigan-cloudy" | "top-zebra" | "top-gradient" | "top-flower" | "top-browny";
@@ -113,8 +117,12 @@ export const landingTranslations = {
             eyebrow: "Catalog",
             title: "Handmade crochet clothing",
             emptyText: "New models are coming soon.",
+            dynamicProductTitle: "New crochet model",
+            dynamicProductDescription: "A new handmade piece added to the catalog.",
+            dynamicProductImageAlt: "Crochet clothing photo",
             groups: [
                 {
+                    id: "cardigans",
                     title: "Cardigans",
                     products: [
                         {
@@ -126,6 +134,7 @@ export const landingTranslations = {
                     ],
                 },
                 {
+                    id: "tops",
                     title: "Tops",
                     products: [
                         {
@@ -225,8 +234,12 @@ export const landingTranslations = {
             eyebrow: "Katalog",
             title: "Ręcznie szydełkowana odzież",
             emptyText: "Nowe modele pojawią się wkrótce.",
+            dynamicProductTitle: "Nowy model szydełkowy",
+            dynamicProductDescription: "Nowa ręcznie robiona rzecz dodana do katalogu.",
+            dynamicProductImageAlt: "Zdjęcie szydełkowanej odzieży",
             groups: [
                 {
+                    id: "cardigans",
                     title: "Kardigany",
                     products: [
                         {
@@ -238,6 +251,7 @@ export const landingTranslations = {
                     ],
                 },
                 {
+                    id: "tops",
                     title: "Topy",
                     products: [
                         {
@@ -337,8 +351,12 @@ export const landingTranslations = {
             eyebrow: "Каталог",
             title: "Одяг ручної роботи гачком",
             emptyText: "Нові моделі скоро з'являться.",
+            dynamicProductTitle: "Нова модель гачком",
+            dynamicProductDescription: "Нова річ ручної роботи, додана до каталогу.",
+            dynamicProductImageAlt: "Фото одягу гачком",
             groups: [
                 {
+                    id: "cardigans",
                     title: "Кардигани",
                     products: [
                         {
@@ -350,6 +368,7 @@ export const landingTranslations = {
                     ],
                 },
                 {
+                    id: "tops",
                     title: "Топи",
                     products: [
                         {
@@ -449,8 +468,12 @@ export const landingTranslations = {
             eyebrow: "Каталог",
             title: "Одежда ручной работы крючком",
             emptyText: "Новые модели скоро появятся.",
+            dynamicProductTitle: "Новая модель крючком",
+            dynamicProductDescription: "Новая вещь ручной работы, добавленная в каталог.",
+            dynamicProductImageAlt: "Фото одежды крючком",
             groups: [
                 {
+                    id: "cardigans",
                     title: "Кардиганы",
                     products: [
                         {
@@ -462,6 +485,7 @@ export const landingTranslations = {
                     ],
                 },
                 {
+                    id: "tops",
                     title: "Топы",
                     products: [
                         {
