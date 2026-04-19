@@ -8,7 +8,7 @@ export const landingLanguages: Array<{
     { code: "pl", label: "PL", flagClassName: "fi fi-pl" },
     { code: "en", label: "EN", flagClassName: "fi fi-gb" },
     { code: "uk", label: "UA", flagClassName: "fi fi-ua" },
-    { code: "ru", label: "RU", flagClassName: "fi fi-ru" },
+    { code: "ru", label: "RU", flagClassName: "" },
 ];
 
 type LandingTranslation = {

@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { buttonVariants, Button } from "@/src/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/src/components/ui/card";
@@ -16,12 +17,17 @@ const catalogProductImages = {
 };
 
 const catalogPageSize = 4;
+type DevPreviewMode = "desktop" | "phone";
 
 export const LandingPageContents = () => {
     const [language, setLanguage] = useState<LandingLanguage>("en");
     const [isCatalogVisible, setIsCatalogVisible] = useState(false);
+    const [devPreviewMode, setDevPreviewMode] = useState<DevPreviewMode>("desktop");
     const catalogRef = useRef<HTMLElement | null>(null);
+    const searchParams = useSearchParams();
     const translation = landingTranslations[language];
+    const isDevelopment = process.env.NODE_ENV === "development";
+    const isDevPreviewFrame = searchParams.has("devViewport");
 
     useEffect(() => {
         document.documentElement.lang = language;
@@ -55,8 +61,26 @@ export const LandingPageContents = () => {
         { label: translation.nav.contact, href: "#contact" },
     ];
 
+    if (isDevelopment && !isDevPreviewFrame && devPreviewMode === "phone") {
+        return (
+            <div className="min-h-screen bg-[#f8eef0] px-4 py-20">
+                <DevViewportSwitch mode={devPreviewMode} onModeChange={setDevPreviewMode} />
+                <div className="mx-auto w-[390px] max-w-full overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-[#ead0d4]">
+                    <iframe
+                        src="/?devViewport=phone"
+                        title="Phone preview"
+                        className="h-[844px] w-full border-0"
+                    />
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-[#f8eef0] text-[#2f2a2a]">
+            {isDevelopment && !isDevPreviewFrame ? (
+                <DevViewportSwitch mode={devPreviewMode} onModeChange={setDevPreviewMode} />
+            ) : null}
             <header className="sticky top-0 z-20 border-b border-white/50 bg-white/45 backdrop-blur-md">
                 <nav className="mx-auto flex min-h-12 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
                     <a href="#aboutMe" className="text-sm font-semibold uppercase tracking-[0.18em] text-[#994d59]">
@@ -151,16 +175,7 @@ export const LandingPageContents = () => {
                                     sizes="(min-width: 1024px) 420px, 100vw"
                                     priority
                                     unoptimized
-                                    className="h-full w-full object-cover transition-opacity duration-1000 ease-out group-hover/photo:opacity-0"
-                                />
-                                <Image
-                                    src="/main-on-hover.jpg?v=2"
-                                    alt=""
-                                    fill
-                                    sizes="(min-width: 1024px) 420px, 100vw"
-                                    loading="eager"
-                                    unoptimized
-                                    className="h-full w-full object-cover opacity-0 transition-opacity duration-1000 ease-out group-hover/photo:opacity-100"
+                                    className="h-full w-full object-cover transition-opacity"
                                 />
                             </div>
                             <div className="px-1 pb-2 pt-5 text-left">
@@ -265,6 +280,35 @@ export const LandingPageContents = () => {
             </main>
         </div>
     )
+}
+
+function DevViewportSwitch({
+    mode,
+    onModeChange,
+}: {
+    mode: DevPreviewMode;
+    onModeChange: (mode: DevPreviewMode) => void;
+}) {
+    return (
+        <div className="fixed left-3 top-3 z-50 flex items-center gap-1 rounded-lg border border-[#ead0d4] bg-white/85 p-1 shadow-md backdrop-blur">
+            {(["desktop", "phone"] as const).map((previewMode) => (
+                <Button
+                    key={previewMode}
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                        "h-8 rounded-md px-3 text-xs capitalize text-[#4d3b3f] hover:bg-[#f8eef0] hover:text-[#994d59]",
+                        mode === previewMode && "bg-[#f8eef0] text-[#994d59]"
+                    )}
+                    aria-pressed={mode === previewMode}
+                    onClick={() => onModeChange(previewMode)}
+                >
+                    {previewMode}
+                </Button>
+            ))}
+        </div>
+    );
 }
 
 type CatalogGroup = typeof landingTranslations.en.catalog.groups[number];
