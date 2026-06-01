@@ -2,7 +2,7 @@
 
 import { ChevronDownIcon } from "lucide-react";
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
     paletteCollections,
     type PaletteCollection,
@@ -20,12 +20,14 @@ export function PaletteSection({
     const sectionRef = useRef<HTMLElement | null>(null);
     const gridRef = useRef<HTMLDivElement | null>(null);
     const [selectedPaletteId, setSelectedPaletteId] = useState<PaletteSetId>("baby-cotton");
+    const [displayedPaletteId, setDisplayedPaletteId] = useState<PaletteSetId>("baby-cotton");
+    const [isPaletteContentVisible, setIsPaletteContentVisible] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
     const [fullHeight, setFullHeight] = useState(0);
     const [collapsedHeight, setCollapsedHeight] = useState<number | null>(null);
     const [cardHeight, setCardHeight] = useState(0);
     const selectedPalette =
-        paletteCollections.find((collection) => collection.id === selectedPaletteId) ??
+        paletteCollections.find((collection) => collection.id === displayedPaletteId) ??
         paletteCollections[0];
     const selectedSections =
         selectedPalette.sections ?? [{ id: selectedPalette.id, colors: selectedPalette.colors }];
@@ -33,6 +35,19 @@ export function PaletteSection({
         (totalCount, section) => totalCount + section.colors.length,
         0
     );
+
+    useEffect(() => {
+        if (selectedPaletteId === displayedPaletteId) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => {
+            setDisplayedPaletteId(selectedPaletteId);
+            requestAnimationFrame(() => setIsPaletteContentVisible(true));
+        }, 180);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [displayedPaletteId, selectedPaletteId]);
 
     useLayoutEffect(() => {
         const grid = gridRef.current;
@@ -139,8 +154,12 @@ export function PaletteSection({
                                 }`}
                                 aria-pressed={collection.id === selectedPaletteId}
                                 onClick={() => {
+                                    if (collection.id === selectedPaletteId) {
+                                        return;
+                                    }
+
+                                    setIsPaletteContentVisible(false);
                                     setSelectedPaletteId(collection.id);
-                                    setIsExpanded(false);
                                 }}
                             >
                                 {collection.label}
@@ -153,7 +172,12 @@ export function PaletteSection({
                         style={{ maxHeight: `${visibleHeight}px` }}
                     >
                         {selectedColorCount > 0 ? (
-                            <div ref={gridRef} className="space-y-5">
+                            <div
+                                ref={gridRef}
+                                className={`space-y-5 transition-opacity duration-300 ease-in-out ${
+                                    isPaletteContentVisible ? "opacity-100" : "opacity-0"
+                                }`}
+                            >
                                 {selectedSections.map((section) => (
                                     <PaletteColorSection
                                         key={section.id}
