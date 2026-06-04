@@ -13,8 +13,8 @@ services:
         ADMIN_EMAILS: ${ADMIN_EMAILS}
     image: kate-crochet:latest
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       NODE_ENV: production
       HOSTNAME: 0.0.0.0
@@ -28,3 +28,24 @@ services:
       ADMIN_EMAILS: ${ADMIN_EMAILS}
     volumes:
       - ${UPLOADS_DIR:-/var/www/shared/uploads}:/app/public/uploads
+
+  caddy:
+    image: caddy:2
+    container_name: shop-caddy
+    restart: unless-stopped
+    depends_on:
+      - shop
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
